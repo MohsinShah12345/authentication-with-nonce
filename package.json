@@ -1,0 +1,24 @@
+{
+  "name": "authentication-with-nonce",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MohsinShah12345/authentication-with-nonce.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MohsinShah12345/authentication-with-nonce/issues"
+  },
+  "homepage": "https://github.com/MohsinShah12345/authentication-with-nonce#readme",
+  "dependencies": {
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.0",
+    "web3": "^1.9.0"
+  }
+}
