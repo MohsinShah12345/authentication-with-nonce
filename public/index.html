@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- To uses web3 package inside this html file -->
+    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+    <title>Authenticating Users</title>
+  </head>
+  <body>
+    <button onclick="connect()">Login With Web3</button>
+    <script type="text/javascript">
+      let account = null; // user wallet address, initial it will be null
+      let userAccessToken = null;
+      async function connect() {
+        // extension is installed in your browser
+        if (window.ethereum) {
+          await window.ethereum.send("eth_requestAccounts");
+          window.w3 = new Web3(window.ethereum);
+          // getting all connected Account
+          var accounts = await w3.eth.getAccounts(); // asyn function
+          account = accounts[0]; // user Wallet Address
+          // authenticating User
+          userAccessToken = await authenticate(account);
+          alert(userAccessToken);
+        }
+      }
+      async function authenticate(address) {
+        // call api in server
+        let res = await fetch(`/nonce?address=${address}`); // passing user wallet Address
+        let resBody = await res.json();
+        // Signing User Through Meta Mask Account
+        let signature = await w3.eth.personal.sign(resBody.message, account);
+        if (signature) {
+          let opts = {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${resBody.tempToken}`,
+            },
+          };
+          let response = await fetch(`/verify?signature=${signature}`, opts);
+          const responseBody = await response.json();
+          return responseBody.token;
+        } else {
+          alert("User Rejected Approval");
+        }
+      }
+    </script>
+  </body>
+</html>
