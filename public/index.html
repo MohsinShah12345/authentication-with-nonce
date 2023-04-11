@@ -22,7 +22,17 @@
           account = accounts[0]; // user Wallet Address
           // authenticating User
           userAccessToken = await authenticate(account);
-          alert(userAccessToken);
+          if (userAccessToken) {
+            let opts = {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${userAccessToken}`,
+              },
+            };
+            let response = await fetch(`/secret`, opts);
+            alert(await response.text());
+          }
         }
       }
       async function authenticate(address) {

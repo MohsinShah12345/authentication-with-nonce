@@ -34,7 +34,25 @@ app.post('/verify', async (req, res) => {
         return res.sendStatus(403)
     }
 
+});
+app.get("/secret", authenticateToken, async (req, res) => {
+    res.send(`Welcome address ${req.authData.verifyAddress}`)
 })
+
+async function authenticateToken(req, res, next) {
+    const authHeader = await req.headers['authorization'];
+    const token = authHeader && authHeader.split(" ")[1];
+    if (token == null) return res.sendStatus(401); // token is undefined
+    jwt.verify(token, jwtSecret, (err, authData) => {
+        console.log("err in verifing auth token", err);
+        if (err) {
+            return res.sendStatus(403)
+        }
+        req.authData = authData;
+        next();
+    })
+
+}
 async function nonceController(req, res) {
     // creating nonce using current Time
     const nonce = new Date().getTime();
